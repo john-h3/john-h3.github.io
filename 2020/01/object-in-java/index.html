@@ -14,7 +14,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog.yahui.tech/img/object-in-java.jpg">
 <meta property="article:published_time" content="2020-01-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-01-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-06T16:00:00.000Z">
 <meta property="article:author" content="John He">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="对象">
@@ -50,7 +50,7 @@
   "name": "Java 中的对象",
   "image": "/img/object-in-java.jpg",
   "datePublished": "2020-01-15T16:00:00.000Z",
-  "dateModified": "2020-01-17T16:00:00.000Z",
+  "dateModified": "2020-02-06T16:00:00.000Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://blog.yahui.tech/2020/01/object-in-java/index.html"
@@ -204,7 +204,7 @@ child<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
 <p>输出结果：</p>
 <pre class="line-numbers language-text"><code class="language-text">null
 child<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>在第一次遇见这种情况时，我也是疑惑的，因为以我的理解第一个输出应该是 <code>null</code> ，其实错了。因为曾经我也认为对子类对象的创建会同时创建父类对象，但现在我能确定只有一个对象被创建，那么一切也就能说通了。如果说重复的方法和成员都在一个类中，那是不可能实现的，那么编译器一定对这些同名加了修饰。逻辑上来说子类比父类更加具体，所以子类会覆盖重复的方法和变量，我们可以通过这么一段伪代码来理解这个复合类：</p>
+<p>在第一次遇见这种情况时，我也是疑惑的，因为以我的理解第一个输出应该是 <code>parent</code> ，其实错了。因为曾经我也认为对子类对象的创建会同时创建父类对象，但现在我能确定只有一个对象被创建，那么一切也就能说通了。如果说重复的方法和成员都在一个类中，那是不可能实现的，那么编译器一定对这些同名加了修饰。逻辑上来说子类比父类更加具体，所以子类会覆盖重复的方法和变量，我们可以通过这么一段伪代码来理解这个复合类：</p>
 <pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Child</span> <span class="token keyword">extends</span> <span class="token class-name">Parent</span> <span class="token punctuation">{</span>
     String <span class="token keyword">super</span><span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"parent"</span><span class="token punctuation">;</span>
     <span class="token keyword">void</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">printName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -219,7 +219,7 @@ child<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
 <pre class="line-numbers language-java"><code class="language-java">Object child <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
 Object parent <span class="token operator">=</span> <span class="token keyword">super</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>这段代码会在第二行报错，显然 <code>super</code> 不是对象，<code>super</code> 只是一个用来关联父类中的成员在子类对象中具体引用的特殊引用。</p>
-<p>对象是 Java 编程思想序论中的内容，我的新博客站也以此为第一篇技术博客，恰逢年初，祝愿新的一年能够一切安好。</p>
+<p>对象是 《Java 编程思想》序论中的内容，我的新博客站也以此为第一篇技术博客，恰逢年初，祝愿新的一年能够一切安好。</p>
 
   </div>
   
