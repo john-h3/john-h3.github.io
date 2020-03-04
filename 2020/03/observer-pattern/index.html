@@ -3,22 +3,22 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>策略模式与 Java 8 | John&#39;s Blog</title>
+  <title>Java 中的 Observer 模式 | John&#39;s Blog</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
-  <meta name="description" content="之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。 策略模式这章上有这么一段话：  但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！  然后，书上就开始利用组合介绍了策略模式。起初，我对这段">
+  <meta name="description" content="What is it? 在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。  谈谈 java.util.Observable可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。 。。。 这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 Observa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="策略模式与 Java 8">
-<meta property="og:url" content="https://blog.yahui.tech/2020/02/learn-strategy-pattern/index.html">
+<meta property="og:title" content="Java 中的 Observer 模式">
+<meta property="og:url" content="https://blog.yahui.tech/2020/03/observer-pattern/index.html">
 <meta property="og:site_name" content="John&#39;s Blog">
-<meta property="og:description" content="之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。 策略模式这章上有这么一段话：  但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！  然后，书上就开始利用组合介绍了策略模式。起初，我对这段">
+<meta property="og:description" content="What is it? 在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。  谈谈 java.util.Observable可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。 。。。 这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 Observa">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.yahui.tech/img/tic-tac-toe-1777880_640.jpg">
-<meta property="article:published_time" content="2020-02-25T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-25T16:00:00.000Z">
+<meta property="og:image" content="https://blog.yahui.tech/img/binocular-blue-sky-daylight-discovery-221538.jpg">
+<meta property="article:published_time" content="2020-03-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-03T16:00:00.000Z">
 <meta property="article:author" content="John He">
 <meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.yahui.tech/img/tic-tac-toe-1777880_640.jpg">
+<meta name="twitter:image" content="https://blog.yahui.tech/img/binocular-blue-sky-daylight-discovery-221538.jpg">
   <link rel="icon" href="/favicon.ico">
   
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -45,14 +45,14 @@
   {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "headline": "策略模式与 Java 8",
-  "name": "策略模式与 Java 8",
-  "image": "/img/tic-tac-toe-1777880_640.jpg",
-  "datePublished": "2020-02-25T16:00:00.000Z",
-  "dateModified": "2020-02-25T16:00:00.000Z",
+  "headline": "Java 中的 Observer 模式",
+  "name": "Java 中的 Observer 模式",
+  "image": "/img/binocular-blue-sky-daylight-discovery-221538.jpg",
+  "datePublished": "2020-03-03T16:00:00.000Z",
+  "dateModified": "2020-03-03T16:00:00.000Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://blog.yahui.tech/2020/02/learn-strategy-pattern/index.html"
+    "@id": "https://blog.yahui.tech/2020/03/observer-pattern/index.html"
   },
   "author": {
     "@type": "Person",
@@ -94,13 +94,13 @@
         <article class="post">
   <figure class="post-thumbnail">
     
-  <img src="/img/tic-tac-toe-1777880_640.jpg" class="thumbnail " alt="策略模式与 Java 8">
+  <img src="/img/binocular-blue-sky-daylight-discovery-221538.jpg" class="thumbnail " alt="Java 中的 Observer 模式">
 
 
   </figure>
-  <span>2020-02-26
+  <span>2020-03-04
 </span>
-  <h1 class="title">策略模式与 Java 8</h1>
+  <h1 class="title">Java 中的 Observer 模式</h1>
   
   <div class="tags">
     
@@ -110,73 +110,45 @@
 
 
   <div class="content">
-    <p>之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。</p>
-<p>策略模式这章上有这么一段话：</p>
-<blockquote>
-<p>但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！</p>
+    <h2 id="What-is-it"><a href="#What-is-it" class="headerlink" title="What is it?"></a>What is it?</h2><blockquote>
+<p>在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。</p>
 </blockquote>
-<p>然后，书上就开始利用组合介绍了策略模式。起初，我对这段话保有疑问，但后来感觉还是没有问题，但现在我发现了问题所在。最新的 Java 8 中接口可以有实现的方法了，这显然是书上的知识受到版本影响，但是接口默认实现也能提供策略模式吗？</p>
-<h2 id="策略模式？"><a href="#策略模式？" class="headerlink" title="策略模式？"></a>策略模式？</h2><p>首先，我们需要知道，策略模式到底是什么？</p>
-<p>书上最后讲了：</p>
+<h2 id="谈谈-java-util-Observable"><a href="#谈谈-java-util-Observable" class="headerlink" title="谈谈 java.util.Observable"></a>谈谈 java.util.Observable</h2><p>可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。</p>
+<p>。。。</p>
+<p>这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 <code>Observable</code> 已经被标记为 <code>@Deprecated(since=&quot;9&quot;)</code> 。这真的是一个巧合，我只是在电脑上装了一个新版本的 IDE ，使用了 IDE 自带的 Java 11 环境，结果。。。</p>
+<p>改为谈谈为什么 Java 要把自己的观察者模式否定吧。</p>
+<p>先看看源码中自身的解释：</p>
 <blockquote>
-<p>策略模式定义了算法族，分别封装起来，让它们之间可以互相替换，此模式让算法的变化独立于使用算法的客户。</p>
+<p>This class and the Observer interface have been deprecated. The event model supported by Observer and Observable is quite limited, the order of notifications delivered by Observable is unspecified, and state changes are not in one-for-one correspondence with notifications. For a richer event model, consider using the java.beans package. For reliable and ordered messaging among threads, consider using one of the concurrent data structures in the java.util.concurrent package. For reactive streams style programming, see the Flow API.</p>
 </blockquote>
-<p>也就是说，策略模式并没有限定形式，只要算法能够替换，对于用户而言又是透明的就可以称之为策略模式。<br>即我们只需要做到以下两点：<br>1.算法有多种实现可以替换<br>2.对于用户透明</p>
-<p>关于对于用户透明，书上采用遵循以下的设计原则：</p>
-<blockquote>
-<p>针对超类型编程，而不是针对实现编程。</p>
-</blockquote>
-<p>这样利用多态的运行时具体实现便能让用户无感知底层的算法。</p>
-<p>关于算法的多种实现，书上采用了对每种算法提供一个单独的具体实现。那么利用 Java 8 的默认实现是否可以有新的方法呢？</p>
-<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">interface</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
-    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 选择排序</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">interface</span> <span class="token class-name">MergeSortable</span> <span class="token keyword">extends</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 归并排序</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">interface</span> <span class="token class-name">InsertSortable</span> <span class="token keyword">extends</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 插入排序</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>于是构建了几种排序，那么有了具体的实现的接口，对于策略模式有影响吗？</p>
-<p>要使用这些接口只有实现它们，结果又回到多个具体实现，最终还是不得不用组合来进行具体算法的切换。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做了这么些探究的工作，最后还是回到了书上的方式。回顾为什么有这个疑惑，是因为书上用了更多的篇幅在讲设计原则，而最后才把设计原则融合在一起告诉我们是模式，但是给人感觉设计原则更加重要，而模式却体现不出重点。就比如本章，我觉得完全可以用以下三个点来概括：</p>
-<ul>
-<li>面向超类型编程（调用者透明）</li>
-<li>使用组合，少用继承（运行时切换）</li>
-<li>结合两者，具体实现的切换调用者无感，便是策略模式</li>
-</ul>
-<p>经过这一概括，虽然我仍然不满意书上的讲述方式，但却明白了书上的各个知识点的连接性，对于这些理解也加深了些许。</p>
+<p>英文很长，大致意思就是说这个模式的使用很有限，对于消息的通知顺序无法指定，状态的更改与通知也不是一对一的，同时推荐了一些更好的事件模式。</p>
+<p>我们先看一下顺序的问题。在 <code>Observable</code> 中能很容易的发现问题：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">notifyObservers</span><span class="token punctuation">(</span>Object arg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> arrLocal<span class="token punctuation">.</span>length<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">>=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token punctuation">(</span>Observer<span class="token punctuation">)</span>arrLocal<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>很明显，在调用更新方法时，循环是倒序的，所以当我们的通知需要有序时，Java 自身的观察者模式便无法正确的工作。</p>
+<p>另一点是通知与状态变更的一一对应问题，同样看源码：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">setChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    changed <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>很显然，状态的变更并不会直接触发通知，使用者必须要手动指定真正的通知时机。</p>
+<p>到这里，我们也就知道 Java 放弃自身的观察者模式的理由了。</p>
+<p>但其实还有原因，其一就是 Observable 是一个类，我们要想使用它就必须要使用继承，那么在需要更多的扩展性的时候会引起问题。同时我们在前面的源码中也能看见，关键的 <code>setChanged</code> 方法是一个 <code>protected</code> 的方法，那么我们只能在实现的类中才能调用，当使用组合的方式的时候，我们将会失去很多的灵活性。</p>
+<p>虽然这次的博客事与愿违，但是同样带来了启发：很多知识书籍的版本的确是落后了，我们应该多看看源码，很多东西其实都变了，如果只停留在以前的认知中是无法成为一个优秀的 coder 的。如果这次不是因为一个小小的意外，我可能就按照 Java 8 版本中的源码来介绍一下 Java 的观察者模式实现了，虽然也会谈及它的不足，但是还是很有可能为了方便在以后的代码中直接使用自带的 <code>Observable</code>。但是这次的弃用注释告诉我们不要怀有侥幸的心理，不够优秀的最终都会被淘汰。</p>
 
   </div>
   
 <nav class="footer-nav">
-  
-    <div class="footer-nav__prev">
-      <div class="footer-nav__label">
-        下一篇
-      </div>
-      <a href="/2020/03/observer-pattern/">
-        Java 中的 Observer 模式
-      </a>
-    </div>
   
   
     <div class="footer-nav__next">
       <div class="footer-nav__label">
         上一篇
       </div>
-      <a href="/2020/02/bypass/">
-        网站的分流
+      <a href="/2020/02/learn-strategy-pattern/">
+        策略模式与 Java 8
       </a>
     </div>
   
