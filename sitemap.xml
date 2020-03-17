@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.yahui.tech/2020/03/decorator-pattern/</loc>
+    
+    <lastmod>2020-03-16T16:00:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.yahui.tech/2020/03/observer-pattern/</loc>
     
     <lastmod>2020-03-03T16:00:00.000Z</lastmod>

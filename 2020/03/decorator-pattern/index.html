@@ -3,22 +3,22 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>网站的分流 | John&#39;s Blog</title>
+  <title>装饰者模式 | John&#39;s Blog</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
-  <meta name="description" content="最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。 因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。 结果之后意外能在百度">
+  <meta name="description" content="装饰者模式概述先来看下模式的 UML 图吧：  看完了图，再来看下装饰者模式的说明：  装饰者模式动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。  归根结底两点：  模式能够动态地扩展功能 比继承更有弹性  介绍这两点之前，我们先讲一个设计原则。 设计原则——开闭原则 类应该对扩展开放，对修改关闭。  代码总是面临着修改，无论当时的情况完成的多好，随着时间的流逝我们">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网站的分流">
-<meta property="og:url" content="https://blog.yahui.tech/2020/02/bypass/index.html">
+<meta property="og:title" content="装饰者模式">
+<meta property="og:url" content="https://blog.yahui.tech/2020/03/decorator-pattern/index.html">
 <meta property="og:site_name" content="John&#39;s Blog">
-<meta property="og:description" content="最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。 因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。 结果之后意外能在百度">
+<meta property="og:description" content="装饰者模式概述先来看下模式的 UML 图吧：  看完了图，再来看下装饰者模式的说明：  装饰者模式动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。  归根结底两点：  模式能够动态地扩展功能 比继承更有弹性  介绍这两点之前，我们先讲一个设计原则。 设计原则——开闭原则 类应该对扩展开放，对修改关闭。  代码总是面临着修改，无论当时的情况完成的多好，随着时间的流逝我们">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.yahui.tech/img/fewawq23rfq2.jpg">
-<meta property="article:published_time" content="2020-02-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-02-07T16:00:00.000Z">
+<meta property="og:image" content="https://blog.yahui.tech/img/apply-blue-brush-carpentry-221027.jpg">
+<meta property="article:published_time" content="2020-03-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-16T16:00:00.000Z">
 <meta property="article:author" content="John He">
-<meta property="article:tag" content="架构">
+<meta property="article:tag" content="设计模式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.yahui.tech/img/fewawq23rfq2.jpg">
+<meta name="twitter:image" content="https://blog.yahui.tech/img/apply-blue-brush-carpentry-221027.jpg">
   <link rel="icon" href="/favicon.ico">
   
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -45,14 +45,14 @@
   {
   "@context": "http://schema.org",
   "@type": "BlogPosting",
-  "headline": "网站的分流",
-  "name": "网站的分流",
-  "image": "/img/fewawq23rfq2.jpg",
-  "datePublished": "2020-02-07T16:00:00.000Z",
-  "dateModified": "2020-02-07T16:00:00.000Z",
+  "headline": "装饰者模式",
+  "name": "装饰者模式",
+  "image": "/img/apply-blue-brush-carpentry-221027.jpg",
+  "datePublished": "2020-03-16T16:00:00.000Z",
+  "dateModified": "2020-03-16T16:00:00.000Z",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://blog.yahui.tech/2020/02/bypass/index.html"
+    "@id": "https://blog.yahui.tech/2020/03/decorator-pattern/index.html"
   },
   "author": {
     "@type": "Person",
@@ -94,84 +94,69 @@
         <article class="post">
   <figure class="post-thumbnail">
     
-  <img src="/img/fewawq23rfq2.jpg" class="thumbnail " alt="网站的分流">
+  <img src="/img/apply-blue-brush-carpentry-221027.jpg" class="thumbnail " alt="装饰者模式">
 
 
   </figure>
-  <span>2020-02-08
+  <span>2020-03-17
 </span>
-  <h1 class="title">网站的分流</h1>
+  <h1 class="title">装饰者模式</h1>
   
   <div class="tags">
     
-      <a class="tag" href="/tags/%E6%9E%B6%E6%9E%84/">架构</a>
+      <a class="tag" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
     
   </div>
 
 
   <div class="content">
-    <p>最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。</p>
-<p>因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。</p>
-<p>结果之后意外能在百度上搜索到 gitee 站点的收录记录。显然是因为百度对于国外服务器的 ip 限制，导致即使上传了站点的链接，只要站点不是国内的站点那就不收录。而 coding.page 虽然是国内的，但是他们的静态页面部署使用的却是国外的服务器。现在，要想让我的网站被百度收录，就必须要依靠国内的服务器，但是 gitee 的自定义域名需要收费，现在决定将为百度的爬虫单独设置一个国内的服务器来收录。</p>
-<h2 id="访问流量的地域分流"><a href="#访问流量的地域分流" class="headerlink" title="访问流量的地域分流"></a>访问流量的地域分流</h2><p>对于来自不同地区的访问，由于国内外网络环境的差别需要提供不同的服务器。现在的计划是对于国内的页面访问将会到 Coding Pages，国外的访问会到 Github Pages，而来自百度爬虫的访问将会到单独提供的服务器。我们可以通过在域名解析中设置不同的解析线路来将访问流量分流。</p>
-<p>整个网站的效果如下：<br><img src="/img/2398hfq29h9qF2F3.jpg" alt=""></p>
-<h2 id="单独服务器的架设"><a href="#单独服务器的架设" class="headerlink" title="单独服务器的架设"></a>单独服务器的架设</h2><p>如果你有一台云服务器，那么最简单的方法就是直接将项目 clone 到服务器上部署，然后通过 nginx 提供服务即可。<br>这里介绍一种稍复杂的架设方式，如下图：<br><img src="/img/90823qh2q398hr923h.jpg" alt=""><br>通信服务器本质上是一个内网穿透，具体参考 <a href="https://github.com/fatedier/frp" target="_blank" rel="noopener">frps</a> 。</p>
-<p>负载均衡的示例配置：</p>
-<pre class="line-numbers language-nginx.conf"><code class="language-nginx.conf">upstream blog {
-    server  localhost:port1  weight=1;
-    server  localhost:port2  weight=1;
-}
-
-server {
-    listen  80;
-    server_name domain_name;
-
-    rewrite ^(.*)$ https://$host$1 permanent;
-}
-
-server {
-    listen 443 ssl;
-    server_name domain_name;
-    ...
-
-    location / {
-        proxy_pass  http://blog;
-    }
-}
-
-server {
-    listen port1;
-
-    ...
-}
-
-server {
-    listen port2;
-
-    ...
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>至此，整个网站的分流修改就结束了。</p>
+    <h2 id="装饰者模式概述"><a href="#装饰者模式概述" class="headerlink" title="装饰者模式概述"></a>装饰者模式概述</h2><p>先来看下模式的 <code>UML</code> 图吧：</p>
+<p><img src="/img/decorator-uml.jpg" alt=""></p>
+<p>看完了图，再来看下装饰者模式的说明：</p>
+<blockquote>
+<p>装饰者模式动态地将责任附加到对象上。若要扩展功能，装饰者提供了比继承更有弹性的替代方案。</p>
+</blockquote>
+<p>归根结底两点：</p>
+<ol>
+<li>模式能够动态地扩展功能</li>
+<li>比继承更有弹性</li>
+</ol>
+<p>介绍这两点之前，我们先讲一个设计原则。</p>
+<h2 id="设计原则——开闭原则"><a href="#设计原则——开闭原则" class="headerlink" title="设计原则——开闭原则"></a>设计原则——开闭原则</h2><blockquote>
+<p>类应该对扩展开放，对修改关闭。</p>
+</blockquote>
+<p>代码总是面临着修改，无论当时的情况完成的多好，随着时间的流逝我们的代码最终仍被淘汰。如果我们不遵循开闭原则，显然带来的是大量的代码重写工作，因为我们不得不修改原来的类。</p>
+<p>回顾之前的策略模式，我们实现不同的算法，然后通过超类型的接口方法来使用它们，不同的算法实现体现了扩展开放性，通过超类型不依赖具体类则让我们无需修改。</p>
+<p>如此一来，我们便能够清晰的串联这些东西。</p>
+<p><code>针对接口编程，而不针对实现编程</code> 这一原则可以让类拥有扩展性和灵活性，同时又符合了开闭原则，换句话说，该设计原则是遵循开闭原则的手段。</p>
+<h2 id="装饰者模式分析"><a href="#装饰者模式分析" class="headerlink" title="装饰者模式分析"></a>装饰者模式分析</h2><p>从之前的 <code>UML</code> 图上可以看出， 装饰者也继承了被装饰类的超类型，那么为什么不省去这一步，直接使用被装饰类的具体子类呢？</p>
+<p>细心的话，我们会发现装饰者中还持有了被装饰类的引用。回顾装饰者模式的第二个特性：比继承更有弹性。所以我们必然是不能直接使用继承的子类的，但通过持有的引用，我们也可以轻易地扩展原有功能。那么，为什么这里还要用继承呢？</p>
+<p>看看这个场景：</p>
+<p>你的经理让你实现一个下拉框的效果，要求当用户点击按钮时，发出一个声音。<br>这很容易，我们直接继承下拉框的类，在触发原有的方法前先调用播放声音的代码，然后再触发下拉操作。<br>过了几天，你的经理说客户反映只有一种声音太无聊了，需要更多的声音。<br>于是，你又写了几个不同的子类，提供了更多的声音。<br>几星期后，客户又来了新的需求，需要某些下拉框有动态加载的效果。<br>于是，你又写了几个全新的动态加载下拉框类。<br>几个月后，客户说需要既有声音，又有动态加载的下拉框。<br>。。。</p>
+<p>客户的需求总是在不断明确的，而我们的代码一旦写好了，便很难改动，因为涉及到方面可能会越来越多。<br>有没有什么方式，可以轻易的扩展功能，还保持着很好的弹性呢？</p>
+<p>要保持弹性，最好就是可以适用于所有的情况。要让一个类可以适用于所有情况，我们可以使用超类型来操作它。对于一个装饰者，我们将它继承自被装饰者的超类型，也就能获得弹性。</p>
+<p>看下面的伪代码：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Component</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name">Decorator</span> <span class="token keyword">extends</span> <span class="token class-name">Component</span><span class="token punctuation">;</span>
+Component decorator1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Decorator1</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Component</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Component decorator2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Decorator2</span><span class="token punctuation">(</span>decorator1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>由于装饰者也继承自被装饰类的超类型，那么我们将其表示为超类型后又能继续被装饰者再次装饰，如此一来，我们可以随意地进行组合，只要每增加一个装饰者，我们的组合就会以阶乘形式增长。</p>
+<h2 id="装饰者模式的缺陷"><a href="#装饰者模式的缺陷" class="headerlink" title="装饰者模式的缺陷"></a>装饰者模式的缺陷</h2><p>如果装饰者模式这么好，那我们为什么不把这个模式贯彻到所有的代码中呢？没错，装饰者模式也有它的不足之处。</p>
+<p>当我们使用装饰者时，因为为了保持弹性，总是会使用超类型来接收对象。当我们在多个装饰调用后，我们很难知道它到底被装饰成了什么，如果把这个类返回给其他人调用，别人也会一脸疑惑。</p>
+<p>以及，为了让弹性足够好，我们总是倾向于让每个扩展功能尽量足够细分，那么后果是生成了更多的装饰者，由于每增加一个装饰者，组合的复杂度总是以阶乘形式增长，最终结果只会是另一场代码灾难。</p>
 
   </div>
   
 <nav class="footer-nav">
-  
-    <div class="footer-nav__prev">
-      <div class="footer-nav__label">
-        下一篇
-      </div>
-      <a href="/2020/02/learn-strategy-pattern/">
-        策略模式与 Java 8
-      </a>
-    </div>
   
   
     <div class="footer-nav__next">
       <div class="footer-nav__label">
         上一篇
       </div>
-      <a href="/2020/01/object-in-java/">
-        Java 中的对象
+      <a href="/2020/03/observer-pattern/">
+        Java 中的 Observer 模式
       </a>
     </div>
   
