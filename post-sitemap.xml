@@ -3,6 +3,14 @@
 
 
     <url>
+        <loc>https://blog.yahui.tech/2020/04/deep-in-spring-ioc-container-bean-factory/</loc>
+        <lastmod>2020-03-31T16:00:00.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://blog.yahui.tech/2020/03/deep-in-spring-spring-core/</loc>
         <lastmod>2020-03-25T16:00:00.000Z</lastmod>
         <changefreq>weekly</changefreq>
