@@ -12,13 +12,13 @@
 <meta property="og:site_name" content="John&#39;s Blog">
 <meta property="og:description" content="对象从何而来Object obj &#x3D; new Object(); Object obj &#x3D; Object.class.getDeclaredConstructor().newInstance(); 上述的两个方法是比较常见的新建对象的方式，大部分书上会告诉我们第一种方式可以创建对象，但却不会告诉我们创建是怎样发生的。因此，对象从何而来我们不会知道，所以在遇到对象的初始化时，总会遇到各种各样的奇怪现">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://blog.yahui.tech/img/object-in-java.jpg">
+<meta property="og:image" content="https://cdn.yahui.tech/img/blog/20/01/object-in-java-thumbnail.jpg">
 <meta property="article:published_time" content="2020-01-15T16:00:00.000Z">
 <meta property="article:modified_time" content="2020-02-07T16:00:00.000Z">
 <meta property="article:author" content="John He">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog.yahui.tech/img/object-in-java.jpg">
+<meta name="twitter:image" content="https://cdn.yahui.tech/img/blog/20/01/object-in-java-thumbnail.jpg">
   <link rel="icon" href="/favicon.ico">
   
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -47,7 +47,7 @@
   "@type": "BlogPosting",
   "headline": "Java 中的对象",
   "name": "Java 中的对象",
-  "image": "/img/object-in-java.jpg",
+  "image": "https://cdn.yahui.tech/img/blog/20/01/object-in-java-thumbnail.jpg",
   "datePublished": "2020-01-15T16:00:00.000Z",
   "dateModified": "2020-02-07T16:00:00.000Z",
   "mainEntityOfPage": {
@@ -57,7 +57,7 @@
   "author": {
     "@type": "Person",
     "name": "John He",
-    "image": "/img/avatar.png",
+    "image": "https://cdn.yahui.tech/img/blog/common/avatar.png",
     "description": "I'm John, now living in Wuxi, China. I'm a backend developer."
   },
   "publisher": {
@@ -65,7 +65,7 @@
     "name": "John He",
     "logo": {
       "@type": "ImageObject",
-      "url": "/img/avatar.png"
+      "url": "https://cdn.yahui.tech/img/blog/common/avatar.png"
     }
   }
 }
@@ -93,7 +93,7 @@
         <article class="post">
   <figure class="post-thumbnail">
     
-  <img src="/img/object-in-java.jpg" class="thumbnail " alt="Java 中的对象">
+  <img src="https://cdn.yahui.tech/img/blog/20/01/object-in-java-thumbnail.jpg" class="thumbnail " alt="Java 中的对象">
 
 
   </figure>
@@ -140,9 +140,9 @@ Object obj <span class="token operator">=</span> Object<span class="token punctu
     <span class="token keyword">private</span> <span class="token keyword">final</span> String name<span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>下面来看下这个过程，首先分配空间，获得一个全为空的对象。</p>
-<p><img src="/img/owapfoewao2w121ed.jpg" alt=""></p>
+<p><img src="https://cdn.yahui.tech/img/blog/20/01/object-in-java-img-01.jpg" alt="img01"></p>
 <p>接着从上至下进行成员变量的初始化，接着，就是构造器的正常调用。</p>
-<p><img src="/img/f98734wgh9f23h92.jpg" alt=""></p>
+<p><img src="https://cdn.yahui.tech/img/blog/20/01/object-in-java-img-02.jpg" alt="img02"></p>
 <h2 id="继承如何影响对象的构建"><a href="#继承如何影响对象的构建" class="headerlink" title="继承如何影响对象的构建"></a>继承如何影响对象的构建</h2><p>上面一节只是从对象自身出发，但是 Java 中有着继承，如果对象涉及到继承那么对象的创建就会复杂的多。大多数的书上会说明调用自身构造器之前，会递归调用基类的构造器。我们都知道 Java 中的所有类都继承自 Object ，那么构造一个对象时会递归创建它的基类对象吗？</p>
 <p>我们可以为 <code>newInstance</code> 方法设置一个断点，然后查看构造一个对象的时候是否会发生调用两次 newInstance 方法。事实上并没有，这也就说明并不会递归地去创建基类对象。通过断点后的栈帧看来，本地方法会递归的将基类的成员都放入同一个对象之中。</p>
 <p>先来看一段不会引发问题的代码：</p>
@@ -267,7 +267,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
   <div class="widget-title">作者</div>
   <aside class="profile media widget">
     <figure class="profile-avatar media-left">
-      <img src="/img/avatar.png" class="avatar" alt="John He">
+      <img src="https://cdn.yahui.tech/img/blog/common/avatar.png" class="avatar" alt="John He">
     </figure>
     <div class="media-content">
       <p>
@@ -297,7 +297,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
             <figure class="media-left">
               
   <a href="/2020/04/deep-in-spring-ioc-container-bean-factory/">
-    <img src="/img/photography-of-blue-ceramic-coffee-cup-734983.jpg" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
+    <img src="https://cdn.yahui.tech/img/blog/20/04/deep-in-spring-ioc-container-bean-factory-thumbnail.jpg" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
   </a>
 
 
@@ -321,7 +321,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
             <figure class="media-left">
               
   <a href="/2020/03/deep-in-spring-spring-core/">
-    <img src="/img/vienam-4922442_640.jpg" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/deep-in-spring-spring-core-thumbnail.jpg" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
   </a>
 
 
@@ -345,7 +345,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
             <figure class="media-left">
               
   <a href="/2020/03/decorator-pattern/">
-    <img src="/img/apply-blue-brush-carpentry-221027.jpg" class="thumbnail is-6x6" alt="装饰者模式">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/decorator-pattern-thumbnail.jpg" class="thumbnail is-6x6" alt="装饰者模式">
   </a>
 
 
@@ -369,7 +369,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
             <figure class="media-left">
               
   <a href="/2020/03/observer-pattern/">
-    <img src="/img/binocular-blue-sky-daylight-discovery-221538.jpg" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
   </a>
 
 
@@ -393,7 +393,7 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
             <figure class="media-left">
               
   <a href="/2020/02/learn-strategy-pattern/">
-    <img src="/img/tic-tac-toe-1777880_640.jpg" class="thumbnail is-6x6" alt="策略模式与 Java 8">
+    <img src="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg" class="thumbnail is-6x6" alt="策略模式与 Java 8">
   </a>
 
 
@@ -450,14 +450,14 @@ Object parent <span class="token operator">=</span> <span class="token keyword">
       
         <p>
           <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">
-            <img alt="知识共享许可协议" style="border-width:0" src="/img/88x31.png" />
+            <img alt="知识共享许可协议" style="border-width:0" src="https://cdn.yahui.tech/img/blog/common/cc_by_sa_4_0.png" />
             </a>
             <br />
             本站内容由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John He</span> 采用 <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可。  
         </p>
         <p>
           <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" rel="noopener">
-            <img src="/img/upyun.png" style="height: 39px; width: 116px;">
+            <img src="https://cdn.yahui.tech/img/blog/common/upyun.png">
           </a>
         </p>
         <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备19059452号</a>
