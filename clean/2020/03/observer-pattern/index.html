@@ -1,0 +1,384 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Java 中的 Observer 模式 | John&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
+  <meta name="description" content="What is it? 在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。  谈谈 java.util.Observable可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。 。。。 这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 Observa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 中的 Observer 模式">
+<meta property="og:url" content="https://blog.yahui.tech/2020/03/observer-pattern/index.html">
+<meta property="og:site_name" content="John&#39;s Blog">
+<meta property="og:description" content="What is it? 在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。  谈谈 java.util.Observable可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。 。。。 这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 Observa">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg">
+<meta property="article:published_time" content="2020-03-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-03-03T16:00:00.000Z">
+<meta property="article:author" content="John He">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg">
+  <link rel="icon" href="https://cdn.yahui.tech/other/favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/bulma/0.6.2/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/font-awesome/4.7.0/font-awesome.min.css">
+  
+<link rel="stylesheet" href="/clean/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/clean/css/custom.css">
+
+  
+  
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java 中的 Observer 模式",
+  "name": "Java 中的 Observer 模式",
+  "image": "https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg",
+  "datePublished": "2020-03-03T16:00:00.000Z",
+  "dateModified": "2020-03-03T16:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.yahui.tech/2020/03/observer-pattern/index.html"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "John He",
+    "image": "https://cdn.yahui.tech/img/blog/common/avatar.png",
+    "description": "I'm John, now living in Wuxi, China. I'm a backend developer."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John He",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cdn.yahui.tech/img/blog/common/avatar.png"
+    }
+  }
+}
+</script>
+
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/clean/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/clean/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+  <header class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a href="/clean/" class="navbar-item">
+      John&#39;s Blog
+    </a>
+  </div>
+  
+</header>
+
+  <div class="container">
+    <div class="columns">
+      <div class="main column is-8">
+        <article class="post">
+  <figure class="post-thumbnail">
+    
+  <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg!top" class="thumbnail" alt="Java 中的 Observer 模式">
+
+
+  </figure>
+  <span>2020-03-04
+</span>
+  <h1 class="title">Java 中的 Observer 模式</h1>
+  
+  <div class="tags">
+    
+      <a class="tag" href="/clean/tags/Java/">Java</a>
+    
+      <a class="tag" href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+    
+  </div>
+
+
+  <div class="content">
+    <h2 id="What-is-it"><a href="#What-is-it" class="headerlink" title="What is it?"></a>What is it?</h2><blockquote>
+<p>在对象之间定义一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象都会受到通知，并自动更新。</p>
+</blockquote>
+<h2 id="谈谈-java-util-Observable"><a href="#谈谈-java-util-Observable" class="headerlink" title="谈谈 java.util.Observable"></a>谈谈 java.util.Observable</h2><p>可能是观察者模式的使用频率很高，Java 为我们提供了一套基础的观察者模式，我们先看看它的结构。</p>
+<p>。。。</p>
+<p>这可能是一个意外，就在我打开 IDE 查看源码的时候，我发现了自从 Java 9 开始，Java 自己封装的 <code>Observable</code> 已经被标记为 <code>@Deprecated(since=&quot;9&quot;)</code> 。这真的是一个巧合，我只是在电脑上装了一个新版本的 IDE ，使用了 IDE 自带的 Java 11 环境，结果。。。</p>
+<p>改为谈谈为什么 Java 要把自己的观察者模式否定吧。</p>
+<p>先看看源码中自身的解释：</p>
+<blockquote>
+<p>This class and the Observer interface have been deprecated. The event model supported by Observer and Observable is quite limited, the order of notifications delivered by Observable is unspecified, and state changes are not in one-for-one correspondence with notifications. For a richer event model, consider using the java.beans package. For reliable and ordered messaging among threads, consider using one of the concurrent data structures in the java.util.concurrent package. For reactive streams style programming, see the Flow API.</p>
+</blockquote>
+<p>英文很长，大致意思就是说这个模式的使用很有限，对于消息的通知顺序无法指定，状态的更改与通知也不是一对一的，同时推荐了一些更好的事件模式。</p>
+<p>我们先看一下顺序的问题。在 <code>Observable</code> 中能很容易的发现问题：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">notifyObservers</span><span class="token punctuation">(</span>Object arg<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> arrLocal<span class="token punctuation">.</span>length<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> i<span class="token operator">>=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">--</span><span class="token punctuation">)</span>
+        <span class="token punctuation">(</span><span class="token punctuation">(</span>Observer<span class="token punctuation">)</span>arrLocal<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> arg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>很明显，在调用更新方法时，循环是倒序的，所以当我们的通知需要有序时，Java 自身的观察者模式便无法正确的工作。</p>
+<p>另一点是通知与状态变更的一一对应问题，同样看源码：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">setChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    changed <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>很显然，状态的变更并不会直接触发通知，使用者必须要手动指定真正的通知时机。</p>
+<p>到这里，我们也就知道 Java 放弃自身的观察者模式的理由了。</p>
+<p>但其实还有原因，其一就是 Observable 是一个类，我们要想使用它就必须要使用继承，那么在需要更多的扩展性的时候会引起问题。同时我们在前面的源码中也能看见，关键的 <code>setChanged</code> 方法是一个 <code>protected</code> 的方法，那么我们只能在实现的类中才能调用，当使用组合的方式的时候，我们将会失去很多的灵活性。</p>
+<p>虽然这次的博客事与愿违，但是同样带来了启发：很多知识书籍的版本的确是落后了，我们应该多看看源码，很多东西其实都变了，如果只停留在以前的认知中是无法成为一个优秀的 coder 的。如果这次不是因为一个小小的意外，我可能就按照 Java 8 版本中的源码来介绍一下 Java 的观察者模式实现了，虽然也会谈及它的不足，但是还是很有可能为了方便在以后的代码中直接使用自带的 <code>Observable</code>。但是这次的弃用注释告诉我们不要怀有侥幸的心理，不够优秀的最终都会被淘汰。</p>
+
+  </div>
+  
+<nav class="footer-nav">
+  
+    <div class="footer-nav__prev">
+      <div class="footer-nav__label">
+        下一篇
+      </div>
+      <a href="/clean/2020/03/decorator-pattern/">
+        装饰者模式
+      </a>
+    </div>
+  
+  
+    <div class="footer-nav__next">
+      <div class="footer-nav__label">
+        上一篇
+      </div>
+      <a href="/clean/2020/02/learn-strategy-pattern/">
+        策略模式与 Java 8
+      </a>
+    </div>
+  
+</nav>
+
+
+</article>
+
+
+      </div>
+      <div class="sidebar column is-4">
+        <aside>
+  
+    <aside class="search widget">
+  <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form" target="_blank">
+    <div class="control has-icons-right">
+      <input type="search" name="q" class="input" placeholder="搜索">
+      <span class="icon is-small is-right">
+        <i class="fa fa-search"></i>
+      </span>
+    </div>
+    <input type="hidden" name="sitesearch" value="https://blog.yahui.tech">
+  </form>
+</aside>
+
+  
+    <div class="widget-wrap">
+  <div class="widget-title">作者</div>
+  <aside class="profile media widget">
+    <figure class="profile-avatar media-left">
+      <img src="https://cdn.yahui.tech/img/blog/common/avatar.png" class="avatar" alt="John He">
+    </figure>
+    <div class="media-content">
+      <p>
+        <strong>
+          <span>John He</span>
+          <span class="icon">
+            <a href="https://github.com/john-h3" target="_blank">
+              <i class="fa fa-github"></i>
+            </a>
+          </span>
+        </strong>
+        <br>
+        <span>I&#39;m John, now living in Wuxi, China. I&#39;m a backend developer.</span>
+      </p>
+    </div>
+  </aside>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <div class="widget-title">最近发表</div>
+    <div class="widget">
+      <ul class="recent-post">
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/">
+    <img src="https://cdn.yahui.tech/img/blog/20/04/deep-in-spring-ioc-container-bean-factory-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/" class="">
+                  深入 Spring —— IOC 容器 —— BeanFactory
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-04-01
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/deep-in-spring-spring-core/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/deep-in-spring-spring-core-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/deep-in-spring-spring-core/" class="">
+                  深入 Spring —— Spring Core
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/decorator-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/decorator-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="装饰者模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/decorator-pattern/" class="">
+                  装饰者模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-17
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/observer-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/observer-pattern/" class="">
+                  Java 中的 Observer 模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-04
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/02/learn-strategy-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="策略模式与 Java 8">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/02/learn-strategy-pattern/" class="">
+                  策略模式与 Java 8
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-02-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget">
+      <a href="/clean/tags/Java/" style="font-size: 20px;">Java</a> <a href="/clean/tags/Spring/" style="font-size: 13.33px;">Spring</a> <a href="/clean/tags/%E5%85%B6%E4%BB%96/" style="font-size: 10px;">其他</a> <a href="/clean/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/04/">四月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/02/">二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/01/">一月 2020</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+
+      </div>
+    </div>
+  </div>
+  <footer class="footer" style="padding-bottom: 3rem;">
+  <div class="container">
+    <div class="content has-text-centered">
+      
+        <p>
+          <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">
+            <img alt="知识共享许可协议" style="border-width:0" src="https://cdn.yahui.tech/img/blog/common/cc_by_sa_4_0.png" />
+            </a>
+            <br />
+            本站内容由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John He</span> 采用 <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可。  
+        </p>
+        <p>
+          <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" rel="noopener">
+            <img src="https://cdn.yahui.tech/img/blog/common/upyun.png">
+          </a>
+        </p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备19059452号</a>
+      
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

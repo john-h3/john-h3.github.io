@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>网站的分流 | John&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
+  <meta name="description" content="最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。 因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。 结果之后意外能在百度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网站的分流">
+<meta property="og:url" content="https://blog.yahui.tech/2020/02/bypass/index.html">
+<meta property="og:site_name" content="John&#39;s Blog">
+<meta property="og:description" content="最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。 因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。 结果之后意外能在百度">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.yahui.tech/img/blog/20/02/bypass-thumbnail.jpg">
+<meta property="article:published_time" content="2020-02-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-07T16:00:00.000Z">
+<meta property="article:author" content="John He">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.yahui.tech/img/blog/20/02/bypass-thumbnail.jpg">
+  <link rel="icon" href="https://cdn.yahui.tech/other/favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/bulma/0.6.2/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/font-awesome/4.7.0/font-awesome.min.css">
+  
+<link rel="stylesheet" href="/clean/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/clean/css/custom.css">
+
+  
+  
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "网站的分流",
+  "name": "网站的分流",
+  "image": "https://cdn.yahui.tech/img/blog/20/02/bypass-thumbnail.jpg",
+  "datePublished": "2020-02-07T16:00:00.000Z",
+  "dateModified": "2020-02-07T16:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.yahui.tech/2020/02/bypass/index.html"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "John He",
+    "image": "https://cdn.yahui.tech/img/blog/common/avatar.png",
+    "description": "I'm John, now living in Wuxi, China. I'm a backend developer."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John He",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cdn.yahui.tech/img/blog/common/avatar.png"
+    }
+  }
+}
+</script>
+
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/clean/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/clean/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+  <header class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a href="/clean/" class="navbar-item">
+      John&#39;s Blog
+    </a>
+  </div>
+  
+</header>
+
+  <div class="container">
+    <div class="columns">
+      <div class="main column is-8">
+        <article class="post">
+  <figure class="post-thumbnail">
+    
+  <img src="https://cdn.yahui.tech/img/blog/20/02/bypass-thumbnail.jpg!top" class="thumbnail" alt="网站的分流">
+
+
+  </figure>
+  <span>2020-02-08
+</span>
+  <h1 class="title">网站的分流</h1>
+  
+  <div class="tags">
+    
+      <a class="tag" href="/clean/tags/%E6%9E%B6%E6%9E%84/">架构</a>
+    
+  </div>
+
+
+  <div class="content">
+    <p>最近发现网站并没有被百度给收录。我已经在页面上添加了谷歌和百度的相关代码，而且在谷歌上已经生效，显然不是代码的问题。经过在百度的资源管理中查看，发现的确是已经上传了链接，并手动添加了 sitemap 。</p>
+<p>因为 coding.page 的静态页面总是莫名崩溃，我曾经将其迁移到 gitee 上去，这一次迁移后，我发现 gitee 的静态站点的自定义域名需要收费，于是就取消了部署。</p>
+<p>结果之后意外能在百度上搜索到 gitee 站点的收录记录。显然是因为百度对于国外服务器的 ip 限制，导致即使上传了站点的链接，只要站点不是国内的站点那就不收录。而 coding.page 虽然是国内的，但是他们的静态页面部署使用的却是国外的服务器。现在，要想让我的网站被百度收录，就必须要依靠国内的服务器，但是 gitee 的自定义域名需要收费，现在决定将为百度的爬虫单独设置一个国内的服务器来收录。</p>
+<h2 id="访问流量的地域分流"><a href="#访问流量的地域分流" class="headerlink" title="访问流量的地域分流"></a>访问流量的地域分流</h2><p>对于来自不同地区的访问，由于国内外网络环境的差别需要提供不同的服务器。现在的计划是对于国内的页面访问将会到 Coding Pages，国外的访问会到 Github Pages，而来自百度爬虫的访问将会到单独提供的服务器。我们可以通过在域名解析中设置不同的解析线路来将访问流量分流。</p>
+<p>整个网站的效果如下：<br><img src="https://cdn.yahui.tech/img/blog/20/02/bypass-img-01.jpg" alt="img01"></p>
+<h2 id="单独服务器的架设"><a href="#单独服务器的架设" class="headerlink" title="单独服务器的架设"></a>单独服务器的架设</h2><p>如果你有一台云服务器，那么最简单的方法就是直接将项目 clone 到服务器上部署，然后通过 nginx 提供服务即可。<br>这里介绍一种稍复杂的架设方式，如下图：<br><img src="https://cdn.yahui.tech/img/blog/20/02/bypass-img-01.jpg" alt="img02"><br>通信服务器本质上是一个内网穿透，具体参考 <a href="https://github.com/fatedier/frp" target="_blank" rel="noopener">frps</a> 。</p>
+<p>负载均衡的示例配置：</p>
+<pre class="line-numbers language-nginx.conf"><code class="language-nginx.conf">upstream blog {
+    server  localhost:port1  weight=1;
+    server  localhost:port2  weight=1;
+}
+
+server {
+    listen  80;
+    server_name domain_name;
+
+    rewrite ^(.*)$ https://$host$1 permanent;
+}
+
+server {
+    listen 443 ssl;
+    server_name domain_name;
+    ...
+
+    location / {
+        proxy_pass  http://blog;
+    }
+}
+
+server {
+    listen port1;
+
+    ...
+}
+
+server {
+    listen port2;
+
+    ...
+}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>至此，整个网站的分流修改就结束了。</p>
+
+  </div>
+  
+<nav class="footer-nav">
+  
+    <div class="footer-nav__prev">
+      <div class="footer-nav__label">
+        下一篇
+      </div>
+      <a href="/clean/2020/02/learn-strategy-pattern/">
+        策略模式与 Java 8
+      </a>
+    </div>
+  
+  
+    <div class="footer-nav__next">
+      <div class="footer-nav__label">
+        上一篇
+      </div>
+      <a href="/clean/2020/01/object-in-java/">
+        Java 中的对象
+      </a>
+    </div>
+  
+</nav>
+
+
+</article>
+
+
+      </div>
+      <div class="sidebar column is-4">
+        <aside>
+  
+    <aside class="search widget">
+  <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form" target="_blank">
+    <div class="control has-icons-right">
+      <input type="search" name="q" class="input" placeholder="搜索">
+      <span class="icon is-small is-right">
+        <i class="fa fa-search"></i>
+      </span>
+    </div>
+    <input type="hidden" name="sitesearch" value="https://blog.yahui.tech">
+  </form>
+</aside>
+
+  
+    <div class="widget-wrap">
+  <div class="widget-title">作者</div>
+  <aside class="profile media widget">
+    <figure class="profile-avatar media-left">
+      <img src="https://cdn.yahui.tech/img/blog/common/avatar.png" class="avatar" alt="John He">
+    </figure>
+    <div class="media-content">
+      <p>
+        <strong>
+          <span>John He</span>
+          <span class="icon">
+            <a href="https://github.com/john-h3" target="_blank">
+              <i class="fa fa-github"></i>
+            </a>
+          </span>
+        </strong>
+        <br>
+        <span>I&#39;m John, now living in Wuxi, China. I&#39;m a backend developer.</span>
+      </p>
+    </div>
+  </aside>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <div class="widget-title">最近发表</div>
+    <div class="widget">
+      <ul class="recent-post">
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/">
+    <img src="https://cdn.yahui.tech/img/blog/20/04/deep-in-spring-ioc-container-bean-factory-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/" class="">
+                  深入 Spring —— IOC 容器 —— BeanFactory
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-04-01
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/deep-in-spring-spring-core/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/deep-in-spring-spring-core-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/deep-in-spring-spring-core/" class="">
+                  深入 Spring —— Spring Core
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/decorator-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/decorator-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="装饰者模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/decorator-pattern/" class="">
+                  装饰者模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-17
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/observer-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/observer-pattern/" class="">
+                  Java 中的 Observer 模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-04
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/02/learn-strategy-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="策略模式与 Java 8">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/02/learn-strategy-pattern/" class="">
+                  策略模式与 Java 8
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-02-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget">
+      <a href="/clean/tags/Java/" style="font-size: 20px;">Java</a> <a href="/clean/tags/Spring/" style="font-size: 13.33px;">Spring</a> <a href="/clean/tags/%E5%85%B6%E4%BB%96/" style="font-size: 10px;">其他</a> <a href="/clean/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/04/">四月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/02/">二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/01/">一月 2020</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+
+      </div>
+    </div>
+  </div>
+  <footer class="footer" style="padding-bottom: 3rem;">
+  <div class="container">
+    <div class="content has-text-centered">
+      
+        <p>
+          <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">
+            <img alt="知识共享许可协议" style="border-width:0" src="https://cdn.yahui.tech/img/blog/common/cc_by_sa_4_0.png" />
+            </a>
+            <br />
+            本站内容由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John He</span> 采用 <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可。  
+        </p>
+        <p>
+          <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" rel="noopener">
+            <img src="https://cdn.yahui.tech/img/blog/common/upyun.png">
+          </a>
+        </p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备19059452号</a>
+      
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

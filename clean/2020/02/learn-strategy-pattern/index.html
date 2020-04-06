@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>策略模式与 Java 8 | John&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
+  <meta name="description" content="之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。 策略模式这章上有这么一段话：  但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！  然后，书上就开始利用组合介绍了策略模式。起初，我对这段">
+<meta property="og:type" content="article">
+<meta property="og:title" content="策略模式与 Java 8">
+<meta property="og:url" content="https://blog.yahui.tech/2020/02/learn-strategy-pattern/index.html">
+<meta property="og:site_name" content="John&#39;s Blog">
+<meta property="og:description" content="之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。 策略模式这章上有这么一段话：  但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！  然后，书上就开始利用组合介绍了策略模式。起初，我对这段">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg">
+<meta property="article:published_time" content="2020-02-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-02-25T16:00:00.000Z">
+<meta property="article:author" content="John He">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg">
+  <link rel="icon" href="https://cdn.yahui.tech/other/favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/bulma/0.6.2/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/font-awesome/4.7.0/font-awesome.min.css">
+  
+<link rel="stylesheet" href="/clean/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/clean/css/custom.css">
+
+  
+  
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "策略模式与 Java 8",
+  "name": "策略模式与 Java 8",
+  "image": "https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg",
+  "datePublished": "2020-02-25T16:00:00.000Z",
+  "dateModified": "2020-02-25T16:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.yahui.tech/2020/02/learn-strategy-pattern/index.html"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "John He",
+    "image": "https://cdn.yahui.tech/img/blog/common/avatar.png",
+    "description": "I'm John, now living in Wuxi, China. I'm a backend developer."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John He",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cdn.yahui.tech/img/blog/common/avatar.png"
+    }
+  }
+}
+</script>
+
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/clean/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/clean/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+  <header class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a href="/clean/" class="navbar-item">
+      John&#39;s Blog
+    </a>
+  </div>
+  
+</header>
+
+  <div class="container">
+    <div class="columns">
+      <div class="main column is-8">
+        <article class="post">
+  <figure class="post-thumbnail">
+    
+  <img src="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg!top" class="thumbnail" alt="策略模式与 Java 8">
+
+
+  </figure>
+  <span>2020-02-26
+</span>
+  <h1 class="title">策略模式与 Java 8</h1>
+  
+  <div class="tags">
+    
+      <a class="tag" href="/clean/tags/Java/">Java</a>
+    
+      <a class="tag" href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+    
+  </div>
+
+
+  <div class="content">
+    <p>之前就学了策略模式，书是《Head First 设计模式》。可能是书本太老了，所以对于一些新的 Java 特性没有利用到。</p>
+<p>策略模式这章上有这么一段话：</p>
+<blockquote>
+<p>但是 Java 接口不具有实现代码，所以继承接口无法达到代码的复用。这意味着：无论何时你需要修改某个行为，你必须得往下追踪并在每一个定义此行为的类中修改它，一不小心，可能会造成新的错误！</p>
+</blockquote>
+<p>然后，书上就开始利用组合介绍了策略模式。起初，我对这段话保有疑问，但后来感觉还是没有问题，但现在我发现了问题所在。最新的 Java 8 中接口可以有实现的方法了，这显然是书上的知识受到版本影响，但是接口默认实现也能提供策略模式吗？</p>
+<h2 id="策略模式？"><a href="#策略模式？" class="headerlink" title="策略模式？"></a>策略模式？</h2><p>首先，我们需要知道，策略模式到底是什么？</p>
+<p>书上最后讲了：</p>
+<blockquote>
+<p>策略模式定义了算法族，分别封装起来，让它们之间可以互相替换，此模式让算法的变化独立于使用算法的客户。</p>
+</blockquote>
+<p>也就是说，策略模式并没有限定形式，只要算法能够替换，对于用户而言又是透明的就可以称之为策略模式。<br>即我们只需要做到以下两点：<br>1.算法有多种实现可以替换<br>2.对于用户透明</p>
+<p>关于对于用户透明，书上采用遵循以下的设计原则：</p>
+<blockquote>
+<p>针对超类型编程，而不是针对实现编程。</p>
+</blockquote>
+<p>这样利用多态的运行时具体实现便能让用户无感知底层的算法。</p>
+<p>关于算法的多种实现，书上采用了对每种算法提供一个单独的具体实现。那么利用 Java 8 的默认实现是否可以有新的方法呢？</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">interface</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
+    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 选择排序</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">interface</span> <span class="token class-name">MergeSortable</span> <span class="token keyword">extends</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 归并排序</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">interface</span> <span class="token class-name">InsertSortable</span> <span class="token keyword">extends</span> <span class="token class-name">Sortable</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">sort</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> integers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 插入排序</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>于是构建了几种排序，那么有了具体的实现的接口，对于策略模式有影响吗？</p>
+<p>要使用这些接口只有实现它们，结果又回到多个具体实现，最终还是不得不用组合来进行具体算法的切换。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>做了这么些探究的工作，最后还是回到了书上的方式。回顾为什么有这个疑惑，是因为书上用了更多的篇幅在讲设计原则，而最后才把设计原则融合在一起告诉我们是模式，但是给人感觉设计原则更加重要，而模式却体现不出重点。就比如本章，我觉得完全可以用以下三个点来概括：</p>
+<ul>
+<li>面向超类型编程（调用者透明）</li>
+<li>使用组合，少用继承（运行时切换）</li>
+<li>结合两者，具体实现的切换调用者无感，便是策略模式</li>
+</ul>
+<p>经过这一概括，虽然我仍然不满意书上的讲述方式，但却明白了书上的各个知识点的连接性，对于这些理解也加深了些许。</p>
+
+  </div>
+  
+<nav class="footer-nav">
+  
+    <div class="footer-nav__prev">
+      <div class="footer-nav__label">
+        下一篇
+      </div>
+      <a href="/clean/2020/03/observer-pattern/">
+        Java 中的 Observer 模式
+      </a>
+    </div>
+  
+  
+    <div class="footer-nav__next">
+      <div class="footer-nav__label">
+        上一篇
+      </div>
+      <a href="/clean/2020/02/bypass/">
+        网站的分流
+      </a>
+    </div>
+  
+</nav>
+
+
+</article>
+
+
+      </div>
+      <div class="sidebar column is-4">
+        <aside>
+  
+    <aside class="search widget">
+  <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form" target="_blank">
+    <div class="control has-icons-right">
+      <input type="search" name="q" class="input" placeholder="搜索">
+      <span class="icon is-small is-right">
+        <i class="fa fa-search"></i>
+      </span>
+    </div>
+    <input type="hidden" name="sitesearch" value="https://blog.yahui.tech">
+  </form>
+</aside>
+
+  
+    <div class="widget-wrap">
+  <div class="widget-title">作者</div>
+  <aside class="profile media widget">
+    <figure class="profile-avatar media-left">
+      <img src="https://cdn.yahui.tech/img/blog/common/avatar.png" class="avatar" alt="John He">
+    </figure>
+    <div class="media-content">
+      <p>
+        <strong>
+          <span>John He</span>
+          <span class="icon">
+            <a href="https://github.com/john-h3" target="_blank">
+              <i class="fa fa-github"></i>
+            </a>
+          </span>
+        </strong>
+        <br>
+        <span>I&#39;m John, now living in Wuxi, China. I&#39;m a backend developer.</span>
+      </p>
+    </div>
+  </aside>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <div class="widget-title">最近发表</div>
+    <div class="widget">
+      <ul class="recent-post">
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/">
+    <img src="https://cdn.yahui.tech/img/blog/20/04/deep-in-spring-ioc-container-bean-factory-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/" class="">
+                  深入 Spring —— IOC 容器 —— BeanFactory
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-04-01
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/deep-in-spring-spring-core/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/deep-in-spring-spring-core-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/deep-in-spring-spring-core/" class="">
+                  深入 Spring —— Spring Core
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/decorator-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/decorator-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="装饰者模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/decorator-pattern/" class="">
+                  装饰者模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-17
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/observer-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/observer-pattern/" class="">
+                  Java 中的 Observer 模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-04
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/02/learn-strategy-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/02/learn-strategy-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="策略模式与 Java 8">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/02/learn-strategy-pattern/" class="">
+                  策略模式与 Java 8
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-02-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget">
+      <a href="/clean/tags/Java/" style="font-size: 20px;">Java</a> <a href="/clean/tags/Spring/" style="font-size: 13.33px;">Spring</a> <a href="/clean/tags/%E5%85%B6%E4%BB%96/" style="font-size: 10px;">其他</a> <a href="/clean/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 16.67px;">设计模式</a>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/04/">四月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/02/">二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/01/">一月 2020</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+
+      </div>
+    </div>
+  </div>
+  <footer class="footer" style="padding-bottom: 3rem;">
+  <div class="container">
+    <div class="content has-text-centered">
+      
+        <p>
+          <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">
+            <img alt="知识共享许可协议" style="border-width:0" src="https://cdn.yahui.tech/img/blog/common/cc_by_sa_4_0.png" />
+            </a>
+            <br />
+            本站内容由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John He</span> 采用 <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可。  
+        </p>
+        <p>
+          <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" rel="noopener">
+            <img src="https://cdn.yahui.tech/img/blog/common/upyun.png">
+          </a>
+        </p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备19059452号</a>
+      
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
