@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Spring Controller 解惑 1 | John&#39;s Blog | Clean</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1">
+  <meta name="description" content="Controller 的请求方式之前，我一直认为 Controller 的请求方式是父子级结构，因为我认为类级别的注解中的路由先匹配，然后匹配方法级别的路由。所以，我也一直认为注解内的请求方式也是父子级的。即方法级注解的请求方式先被判定，如果不能进入，那么自然不能进入到方法级的路由。然而最近我的技术经理告诉我，方法级别的请求方式会覆盖类级别的请求方式，也就是说并非是父子级别结构。 构建一个代码场景">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Controller 解惑 1">
+<meta property="og:url" content="https://blog.yahui.tech/2020/05/spring-controller-problems-01/index.html">
+<meta property="og:site_name" content="John&#39;s Blog | Clean">
+<meta property="og:description" content="Controller 的请求方式之前，我一直认为 Controller 的请求方式是父子级结构，因为我认为类级别的注解中的路由先匹配，然后匹配方法级别的路由。所以，我也一直认为注解内的请求方式也是父子级的。即方法级注解的请求方式先被判定，如果不能进入，那么自然不能进入到方法级的路由。然而最近我的技术经理告诉我，方法级别的请求方式会覆盖类级别的请求方式，也就是说并非是父子级别结构。 构建一个代码场景">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.yahui.tech/img/blog/20/05/spring-controller-problems-01-thumbnail.jpg">
+<meta property="article:published_time" content="2020-04-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-04-30T16:00:00.000Z">
+<meta property="article:author" content="John He">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.yahui.tech/img/blog/20/05/spring-controller-problems-01-thumbnail.jpg">
+  <link rel="icon" href="https://cdn.yahui.tech/other/favicon.ico">
+  
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/bulma/0.6.2/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.yahui.tech/lib/font-awesome/4.7.0/font-awesome.min.css">
+  
+<link rel="stylesheet" href="/clean/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/clean/css/custom.css">
+
+  
+  
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Spring Controller 解惑 1",
+  "name": "Spring Controller 解惑 1",
+  "image": "https://cdn.yahui.tech/img/blog/20/05/spring-controller-problems-01-thumbnail.jpg",
+  "datePublished": "2020-04-30T16:00:00.000Z",
+  "dateModified": "2020-04-30T16:00:00.000Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://blog.yahui.tech/2020/05/spring-controller-problems-01/index.html"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "John He",
+    "image": "https://cdn.yahui.tech/img/blog/common/avatar.png",
+    "description": "I'm John, now living in Wuxi, China. I'm a backend developer."
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "John He",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cdn.yahui.tech/img/blog/common/avatar.png"
+    }
+  }
+}
+</script>
+
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/clean/css/prism-atom-dark.css" type="text/css">
+<link rel="stylesheet" href="/clean/css/prism-line-numbers.css" type="text/css"></head>
+
+<body>
+  <header class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a href="/clean/" class="navbar-item">
+      John&#39;s Blog | Clean
+    </a>
+  </div>
+  
+</header>
+
+  <div class="container">
+    <div class="columns">
+      <div class="main column is-8">
+        <article class="post">
+  <figure class="post-thumbnail">
+    
+  <img src="https://cdn.yahui.tech/img/blog/20/05/spring-controller-problems-01-thumbnail.jpg!top" class="thumbnail" alt="Spring Controller 解惑 1">
+
+
+  </figure>
+  <span>2020-05-01
+</span>
+  <h1 class="title">Spring Controller 解惑 1</h1>
+  
+  <div class="tags">
+    
+      <a class="tag" href="/clean/tags/Java/">Java</a>
+    
+      <a class="tag" href="/clean/tags/Spring/">Spring</a>
+    
+  </div>
+
+
+  <div class="content">
+    <h2 id="Controller-的请求方式"><a href="#Controller-的请求方式" class="headerlink" title="Controller 的请求方式"></a>Controller 的请求方式</h2><p>之前，我一直认为 Controller 的请求方式是父子级结构，因为我认为类级别的注解中的路由先匹配，然后匹配方法级别的路由。<br>所以，我也一直认为注解内的请求方式也是父子级的。即方法级注解的请求方式先被判定，如果不能进入，那么自然不能进入到方法级的路由。<br>然而最近我的技术经理告诉我，方法级别的请求方式会覆盖类级别的请求方式，也就是说并非是父子级别结构。</p>
+<p>构建一个代码场景来测试一下：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"test"</span><span class="token punctuation">,</span> method <span class="token operator">=</span> RequestMethod<span class="token punctuation">.</span>POST<span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestController</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"get"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> Object <span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonMap</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token string">"ok"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>来看看两种请求方式的结果：</p>
+<pre class="line-numbers language-json"><code class="language-json">// get
+<span class="token punctuation">{</span>
+  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token string">"ok"</span>
+<span class="token punctuation">}</span>
+// post
+<span class="token punctuation">{</span>
+  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token string">"ok"</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>相当的意外，竟然都能成功。现在能得到的结论是，请求方式限制是累加的，并不会覆盖。</p>
+<h2 id="Controller-的参数"><a href="#Controller-的参数" class="headerlink" title="Controller 的参数"></a>Controller 的参数</h2><h3 id="基本类型与包装类型"><a href="#基本类型与包装类型" class="headerlink" title="基本类型与包装类型"></a>基本类型与包装类型</h3><p>经常写 <code>Controller</code> 的相关代码，于是对于一些参数的问题也有总结。<br>不同的人写不同的代码，于是该问题就来了。<br>有的人喜欢用 <code>int</code>，有的人喜欢用 <code>Integer</code>，当这两个参数出现在 <code>Controller</code> 中，问题来了。</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"post"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> Object <span class="token function">post</span><span class="token punctuation">(</span>Integer id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonMap</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token string">"ok"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>当前端请求时，如果 <code>id</code> 没提交或是空串，那么后端其实仍能接收到，因为 <code>Spring</code> 帮我们把参数进行了初始化，当为空时，后端会接收到 <code>null</code> 。<br>但是如果参数是基本类型时：</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"post"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> Object <span class="token function">post</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonMap</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token string">"ok"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>再传一个空时，就不能正常的请求了。</p>
+<pre class="line-numbers language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"timestamp"</span><span class="token operator">:</span> <span class="token string">"2020-04-30T06:46:33.863+0000"</span><span class="token punctuation">,</span>
+  <span class="token property">"status"</span><span class="token operator">:</span> <span class="token number">500</span><span class="token punctuation">,</span>
+  <span class="token property">"error"</span><span class="token operator">:</span> <span class="token string">"Internal Server Error"</span><span class="token punctuation">,</span>
+  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"Optional int parameter 'id' is present but cannot be translated into a null value due to being declared as a primitive type."</span><span class="token punctuation">,</span>
+  <span class="token property">"path"</span><span class="token operator">:</span> <span class="token string">"/test/post"</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>原因也很简单，<code>Spring</code> 帮我们将前端的参数转换为 <code>Controller</code> 的方法需要的参数，然而将一个 <code>null</code> 转为基本类型发生了错误。</p>
+<p>于是乎，我就想到了利用这个特性，我可以用基本类型要求必须字段。<br>下面三种方式功能基本上一致，都要求了 <code>id</code> 字段必须，然而由于 <code>Spring</code> 的处理，响应信息是不同的，响应的状态码也不同（基本类型属于服务器错误 - 500，这个在某些情境下很重要），加了注解的更加能够理解，而加了注解参数的就一目了然。</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token keyword">void</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span>
+
+<span class="token keyword">void</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span> Integer id<span class="token punctuation">)</span>
+
+<span class="token keyword">void</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>required <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span> Integer id<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>后果是，别人不能看明白我写的方法的参数要求，由于多个注解穿插，一会用注解，一会基本类型，虽然我自己是明白的，但其他人增加了负担。最后得到的结论是，尽量把作用写明了，最好是能够一目了然，所以在今后的工作中，相同情况下我会使用第二种方式来声明参数，这样子虽然麻烦但带来的效果却是更好的。</p>
+<h3 id="RequestParam-的-defaultValue"><a href="#RequestParam-的-defaultValue" class="headerlink" title="@RequestParam 的 defaultValue"></a>@RequestParam 的 defaultValue</h3><p>这个问题是我无意中想到的，如果一个参数要求必须，然而我们又给它设置默认值，那么这个默认值还有意义吗？</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"post"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> Object <span class="token function">post</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>defaultValue <span class="token operator">=</span> <span class="token string">"1"</span><span class="token punctuation">)</span> Integer id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> Collections<span class="token punctuation">.</span><span class="token function">singletonMap</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>默认情况下，<code>@RequestParam</code> 注解会为参数添加必须条件，那么看起来似乎是会让 <code>defaultValue</code> 无效，然而当 <code>id</code> 为空时：</p>
+<pre class="line-numbers language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"id"</span><span class="token operator">:</span> <span class="token number">1</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>使用了默认值，也就是说必须条件没有生效。仔细看看 <code>@RequestParam</code> 这个注解，能发现：</p>
+<pre class="line-numbers language-java"><code class="language-java"> <span class="token comment" spellcheck="true">/**
+  * Whether the parameter is required.
+    * &lt;p>Defaults to {@code true}, leading to an exception being thrown
+  * if the parameter is missing in the request. Switch this to
+  * {@code false} if you prefer a {@code null} value if the parameter is
+  * not present in the request.
+  * &lt;p>Alternatively, provide a {@link #defaultValue}, which implicitly
+  * sets this flag to {@code false}.
+  */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>最后提到了如果提供了一个默认值时，注解会被动地将 <code>required</code> 设置为 <code>false</code>，这么一来即使我们设置了 <code>required</code> 也会无效。</p>
+<pre class="line-numbers language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
+  * The default value to use as a fallback when the request parameter is
+  * not provided or has an empty value.
+  * &lt;p>Supplying a default value implicitly sets {@link #required} to
+  * {@code false}.
+  */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从 <code>defaultValue</code> 的注释中，我们能得知当请求参数没有提供或者是一个空值时，默认值则会生效。</p>
+
+  </div>
+  
+<nav class="footer-nav">
+  
+  
+    <div class="footer-nav__next">
+      <div class="footer-nav__label">
+        上一篇
+      </div>
+      <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/">
+        深入 Spring —— IOC 容器 —— BeanFactory
+      </a>
+    </div>
+  
+</nav>
+
+
+</article>
+
+
+      </div>
+      <div class="sidebar column is-4">
+        <aside>
+  
+    <aside class="search widget">
+  <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form" target="_blank">
+    <div class="control has-icons-right">
+      <input type="search" name="q" class="input" placeholder="搜索">
+      <span class="icon is-small is-right">
+        <i class="fa fa-search"></i>
+      </span>
+    </div>
+    <input type="hidden" name="sitesearch" value="https://blog.yahui.tech">
+  </form>
+</aside>
+
+  
+    <div class="widget-wrap">
+  <div class="widget-title">作者</div>
+  <aside class="profile media widget">
+    <figure class="profile-avatar media-left">
+      <img src="https://cdn.yahui.tech/img/blog/common/avatar.png" class="avatar" alt="John He">
+    </figure>
+    <div class="media-content">
+      <p>
+        <strong>
+          <span>John He</span>
+          <span class="icon">
+            <a href="https://github.com/john-h3" target="_blank">
+              <i class="fa fa-github"></i>
+            </a>
+          </span>
+        </strong>
+        <br>
+        <span>I&#39;m John, now living in Wuxi, China. I&#39;m a backend developer.</span>
+      </p>
+    </div>
+  </aside>
+</div>
+
+  
+    
+  <div class="widget-wrap">
+    <div class="widget-title">最近发表</div>
+    <div class="widget">
+      <ul class="recent-post">
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/05/spring-controller-problems-01/">
+    <img src="https://cdn.yahui.tech/img/blog/20/05/spring-controller-problems-01-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="Spring Controller 解惑 1">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/05/spring-controller-problems-01/" class="">
+                  Spring Controller 解惑 1
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-05-01
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/">
+    <img src="https://cdn.yahui.tech/img/blog/20/04/deep-in-spring-ioc-container-bean-factory-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— IOC 容器 —— BeanFactory">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/04/deep-in-spring-ioc-container-bean-factory/" class="">
+                  深入 Spring —— IOC 容器 —— BeanFactory
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-04-01
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/deep-in-spring-spring-core/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/deep-in-spring-spring-core-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="深入 Spring —— Spring Core">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/deep-in-spring-spring-core/" class="">
+                  深入 Spring —— Spring Core
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-26
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/decorator-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/decorator-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="装饰者模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/decorator-pattern/" class="">
+                  装饰者模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-17
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+          <li class="recent-post-item media">
+            <figure class="media-left">
+              
+  <a href="/clean/2020/03/observer-pattern/">
+    <img src="https://cdn.yahui.tech/img/blog/20/03/observer-pattern-thumbnail.jpg!recent" class="thumbnail is-6x6" alt="Java 中的 Observer 模式">
+  </a>
+
+
+            </figure>
+            <div class="media-content">
+              <p class="">
+                <a href="/clean/2020/03/observer-pattern/" class="">
+                  Java 中的 Observer 模式
+                </a>
+              </p>
+              <p class="">
+                <small>
+                  2020-03-04
+
+                </small>
+              </p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget">
+      <a href="/clean/tags/Java/" style="font-size: 20px;">Java</a> <a href="/clean/tags/Spring/" style="font-size: 15px;">Spring</a> <a href="/clean/tags/%E5%85%B6%E4%BB%96/" style="font-size: 10px;">其他</a> <a href="/clean/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 10px;">架构</a> <a href="/clean/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 15px;">设计模式</a>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/04/">四月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/03/">三月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/02/">二月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/clean/archives/2020/01/">一月 2020</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+  
+</aside>
+
+      </div>
+    </div>
+  </div>
+  <footer class="footer" style="padding-bottom: 3rem;">
+  <div class="container">
+    <div class="content has-text-centered">
+      
+        <p>
+          <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">
+            <img alt="知识共享许可协议" style="border-width:0" src="https://cdn.yahui.tech/img/blog/common/cc_by_sa_4_0.png" />
+            </a>
+            <br />
+            本站内容由 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">John He</span> 采用 <a rel="license noopener" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可。  
+        </p>
+        <p>
+          <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" rel="noopener">
+            <img src="https://cdn.yahui.tech/img/blog/common/upyun.png">
+          </a>
+        </p>
+        <a href="http://www.beian.miit.gov.cn/" target="_blank" rel="noopener">苏ICP备19059452号</a>
+      
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
